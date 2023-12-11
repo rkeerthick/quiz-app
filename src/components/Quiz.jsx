@@ -2,34 +2,39 @@ import { useCallback, useState } from "react";
 import QUESTIONS from "../../questions";
 import summaryImage from "../assets/quiz-complete.png";
 import Question from "./Question";
+import Summary from "./Summary";
 
 const Quiz = () => {
   const [userAnswers, setUserAnswers] = useState([]);
+
   const activeQuestionIndex = userAnswers.length;
-  const isQuizIsCompleted = activeQuestionIndex === QUESTIONS.length;
+  const quizIsComplete = activeQuestionIndex === QUESTIONS.length;
 
-  const handleSelectAnswer = useCallback((selectedAnswer) => {
-    setUserAnswers((prev) => [...prev, selectedAnswer]);
-  }, []);
+  const handleSelectAnswer = useCallback(function handleSelectAnswer(
+    selectedAnswer
+  ) {
+    setUserAnswers((prevUserAnswers) => {
+      return [...prevUserAnswers, selectedAnswer];
+    });
+  },
+      []);
+    
+    console.log(userAnswers)
 
-  const handleSkipAnswer = useCallback(() => {
-    handleSelectAnswer(null);
-  }, [handleSelectAnswer]);
+  const handleSkipAnswer = useCallback(
+    () => handleSelectAnswer(null),
+    [handleSelectAnswer]
+  );
 
-  if (isQuizIsCompleted) {
-    return (
-      <div id="summary">
-        <img src={summaryImage} />
-        <h2>Quiz is completed!!!</h2>
-      </div>
-    );
+  if (quizIsComplete) {
+    return <Summary answers={userAnswers} />
   }
 
   return (
     <div id="quiz">
       <Question
         key={activeQuestionIndex}
-        activeQuestionIndex={activeQuestionIndex}
+        index={activeQuestionIndex}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />

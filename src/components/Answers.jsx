@@ -1,34 +1,36 @@
 import React, { useRef } from "react";
 
-const Answers = ({ answer, selectedAnswer, answerState, onSelect }) => {
+const Answers = ({ answers, selectedAnswer, answerState, onSelect }) => {
   const shuffledAnswers = useRef();
+
   if (!shuffledAnswers.current) {
-    shuffledAnswers.current = [...answer];
+    shuffledAnswers.current = [...answers];
     shuffledAnswers.current.sort(() => Math.random() - 0.5);
   }
+
   return (
     <ul id="answers">
       {shuffledAnswers.current.map((answer) => {
         const isSelected = selectedAnswer === answer;
-        let cssClasses = "";
+        let cssClass = "";
+
         if (answerState === "answered" && isSelected) {
-          cssClasses = "selected";
+          cssClass = "selected";
         }
 
         if (
           (answerState === "correct" || answerState === "wrong") &&
           isSelected
         ) {
-          cssClasses = answerState;
+          cssClass = answerState;
         }
 
         return (
           <li key={answer} className="answer">
             <button
-              disabled={answerState !== ""}
-              className={cssClasses}
               onClick={() => onSelect(answer)}
-              type="button"
+              className={cssClass}
+              disabled={answerState !== ""}
             >
               {answer}
             </button>
